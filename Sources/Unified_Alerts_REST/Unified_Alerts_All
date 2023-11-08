@@ -1,0 +1,136 @@
+{
+  "type": "collection",
+  "ttl": "4h",
+  "removeFields": [],
+  "resumeOnBoot": false,
+  "schedule": {
+    "cronSchedule": "*/60 * * * *",
+    "maxConcurrentRuns": 1,
+    "skippable": true,
+    "run": {
+      "rescheduleDroppedTasks": true,
+      "maxTaskReschedule": 1,
+      "logLevel": "info",
+      "jobTimeout": "0",
+      "mode": "run",
+      "timeRangeType": "relative",
+      "timestampTimezone": "UTC",
+      "expression": "true",
+      "minTaskSize": "1MB",
+      "maxTaskSize": "10MB",
+      "earliest": "-1hr"
+    },
+    "enabled": false
+  },
+  "streamtags": [
+    "GitHub"
+  ],
+  "workerAffinity": false,
+  "collector": {
+    "conf": {
+      "discovery": {
+        "discoverType": "http",
+        "discoverMethod": "get",
+        "itemList": [],
+        "discoverUrl": "`https://api.crowdstrike.com/alerts/queries/alerts/v1` ",
+        "discoverRequestParams": [
+          {
+            "name": "filter",
+            "value": "`updated_timestamp:>'${(new Date(`${earliest}`*1000).toISOString())}'`"
+          },
+          {
+            "name": "limit",
+            "value": "1000"
+          }
+        ],
+        "discoverDataField": "resources",
+        "discoverRequestHeaders": [
+          {
+            "name": "Accept",
+            "value": "application/json"
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "name": "User-agent",
+            "value": "Cribl_Stream"
+          }
+        ]
+      },
+      "collectMethod": "post_with_body",
+      "pagination": {
+        "type": "none",
+        "offsetField": "offset",
+        "limitField": "limit",
+        "limit": 4500,
+        "maxPages": 5000,
+        "zeroIndexed": false,
+        "totalRecordField": "total"
+      },
+      "authentication": "loginSecret",
+      "timeout": 0,
+      "useRoundRobinDns": false,
+      "disableTimeFilter": false,
+      "rejectUnauthorized": false,
+      "safeHeaders": [],
+      "retryRules": {
+        "type": "backoff",
+        "interval": 1000,
+        "limit": 5,
+        "multiplier": 2,
+        "codes": [
+          429,
+          503
+        ],
+        "enableHeader": true
+      },
+      "loginUrl": "`https://api.crowdstrike.com/oauth2/token`",
+      "loginBody": "`client_id=${username}&client_secret=${password}`",
+      "tokenRespAttribute": "access_token",
+      "authHeaderKey": "Authorization",
+      "authHeaderExpr": "`Bearer ${token}`",
+      "collectBody": "`{\"ids\":[\"${id}\"] }`",
+      "password": "",
+      "username": "",
+      "collectUrl": "`https://api.crowdstrike.com//alerts/entities/alerts/v1`",
+      "collectRequestHeaders": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authRequestHeaders": [
+        {
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        },
+        {
+          "name": "accept",
+          "value": "application/json"
+        }
+      ],
+      "collectRequestParams": [],
+      "credentialsSecret": ""
+    },
+    "destructive": false,
+    "type": "rest"
+  },
+  "input": {
+    "type": "collection",
+    "staleChannelFlushMs": 10000,
+    "sendToRoutes": true,
+    "preprocess": {
+      "disabled": true
+    },
+    "throttleRatePerSec": "0",
+    "metadata": [],
+    "output": "CrowdStrike_Unified_Alerts",
+    "breakerRulesets": [
+      "Cribl - Do Not Break Ruleset"
+    ]
+  },
+  "savedState": {},
+  "id": "CrowdStrike_Unified_Alerts"
+}
