@@ -1,0 +1,123 @@
+{
+  "type": "collection",
+  "ttl": "4h",
+  "removeFields": [],
+  "resumeOnBoot": false,
+  "schedule": {},
+  "streamtags": [
+    "CrowdStrike"
+  ],
+  "workerAffinity": false,
+  "collector": {
+    "conf": {
+      "discovery": {
+        "discoverType": "none",
+        "discoverMethod": "get",
+        "itemList": [],
+        "discoverDataField": "resources",
+        "discoverRequestHeaders": [
+          {
+            "value": "application/json",
+            "name": "Accept"
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "discoverRequestParams": [
+          {
+            "name": "limit",
+            "value": "500"
+          },
+          {
+            "name": "filter",
+            "value": "`score:>10`"
+          }
+        ],
+        "discoverUrl": "`https://api.crowdstrike.com/zero-trust-assessment/queries/assessments/v1?`"
+      },
+      "collectMethod": "get",
+      "pagination": {
+        "type": "response_body",
+        "maxPages": 50,
+        "attribute": [
+          "pagination.after"
+        ]
+      },
+      "authentication": "loginSecret",
+      "timeout": 0,
+      "useRoundRobinDns": false,
+      "disableTimeFilter": false,
+      "rejectUnauthorized": false,
+      "safeHeaders": [],
+      "retryRules": {
+        "type": "backoff",
+        "interval": 1000,
+        "limit": 5,
+        "multiplier": 2,
+        "codes": [
+          429,
+          503
+        ],
+        "enableHeader": true
+      },
+      "loginUrl": "`https://api.crowdstrike.com/oauth2/token`",
+      "loginBody": "`client_id=${username}&client_secret=${password}`",
+      "tokenRespAttribute": "access_token",
+      "authHeaderKey": "Authorization",
+      "authHeaderExpr": "`Bearer ${token}`",
+      "collectBody": "`{\"ids\":[\"${id}\"]}`",
+      "password": "",
+      "username": "",
+      "collectUrl": "`https://api.crowdstrike.com/zero-trust-assessment/queries/assessments/v1?`",
+      "authRequestHeaders": [
+        {
+          "value": "application/json",
+          "name": "accept"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        }
+      ],
+      "collectRequestParams": [
+        {
+          "name": "limit",
+          "value": "500"
+        },
+        {
+          "name": "filter",
+          "value": "`score:>0`"
+        }
+      ],
+      "collectRequestHeaders": [
+        {
+          "value": "application/json",
+          "name": "Content-Type"
+        },
+        {
+          "value": "application/json",
+          "name": "Accept"
+        }
+      ],
+      "credentialsSecret": ""
+    },
+    "destructive": false,
+    "type": "rest"
+  },
+  "input": {
+    "type": "collection",
+    "staleChannelFlushMs": 10000,
+    "sendToRoutes": true,
+    "preprocess": {
+      "disabled": true
+    },
+    "throttleRatePerSec": "0",
+    "breakerRulesets": [
+      "CrowdStrike_ZeroTrust_Scores_Event_Breaker"
+    ]
+  },
+  "savedState": {},
+  "id": "CrowdStrike_ZeroTrust_Scores_Pagination"
+}
