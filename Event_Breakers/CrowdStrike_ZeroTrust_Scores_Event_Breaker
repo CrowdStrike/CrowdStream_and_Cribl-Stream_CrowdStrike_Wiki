@@ -1,0 +1,29 @@
+{
+  "id": "CrowdStrike_ZeroTrust_Scores_Event_Breaker",
+  "lib": "custom",
+  "minRawLength": 256,
+  "tags": "CrowdStrike,CrowdStrike_Zero_Trust",
+  "rules": [
+    {
+      "condition": "__collectStats.url.includes(`/zero-trust-assessment/queries/assessments`)",
+      "type": "json_array",
+      "timestampAnchorRegex": "/^/",
+      "timestamp": {
+        "type": "current",
+        "length": 150
+      },
+      "timestampTimezone": "UTC",
+      "timestampEarliest": "-420weeks",
+      "timestampLatest": "+1week",
+      "maxEventBytes": 51200,
+      "disabled": false,
+      "parserEnabled": false,
+      "shouldUseDataRaw": false,
+      "jsonExtractAll": false,
+      "eventBreakerRegex": "/[\\n\\r]+(?!\\s)/",
+      "name": "CrowdStrike Zero Trust Events",
+      "jsonArrayField": "resources"
+    }
+  ],
+  "description": "Used to break the data from CrowdStrike's ZeroTrust Score API"
+}
