@@ -124,7 +124,7 @@
     },
     "throttleRatePerSec": "0",
     "metadata": [],
-    "output": "CrowdStrike_Incidents",
+    "output": "falCON_2023_CrowdStrike_Incidents",
     "breakerRulesets": [
       "Cribl - Do Not Break Ruleset"
     ]
