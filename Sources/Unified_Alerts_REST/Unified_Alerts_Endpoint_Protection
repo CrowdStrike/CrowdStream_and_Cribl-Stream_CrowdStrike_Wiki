@@ -37,7 +37,7 @@
         "discoverRequestParams": [
           {
             "name": "limit",
-            "value": "1000"
+            "value": "10000"
           },
           {
             "name": "filter",
