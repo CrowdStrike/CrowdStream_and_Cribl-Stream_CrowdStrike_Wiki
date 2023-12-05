@@ -40,7 +40,7 @@
           },
           {
             "name": "limit",
-            "value": "1000"
+            "value": "10000"
           }
         ],
         "discoverDataField": "resources",
