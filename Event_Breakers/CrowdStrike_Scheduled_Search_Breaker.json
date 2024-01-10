@@ -1,0 +1,29 @@
+{
+  "lib": "custom",
+  "minRawLength": 256,
+  "id": "CrowdStrike_Scheduled_Search",
+  "rules": [
+    {
+      "condition": "__collectStats.url.includes(`/reports/entities/report-executions-download/v1`)",
+      "type": "json_array",
+      "timestampAnchorRegex": "/_time/",
+      "timestamp": {
+        "type": "auto",
+        "length": 15000
+      },
+      "timestampTimezone": "utc",
+      "timestampEarliest": "-420weeks",
+      "timestampLatest": "+1week",
+      "maxEventBytes": 124000,
+      "disabled": false,
+      "parserEnabled": false,
+      "shouldUseDataRaw": false,
+      "jsonExtractAll": true,
+      "eventBreakerRegex": "/(?:}\\]},)/",
+      "name": "CS_Scheduled_Search",
+      "jsonTimeField": "_time",
+      "fields": []
+    }
+  ],
+  "tags": "CrowdStrike"
+}
