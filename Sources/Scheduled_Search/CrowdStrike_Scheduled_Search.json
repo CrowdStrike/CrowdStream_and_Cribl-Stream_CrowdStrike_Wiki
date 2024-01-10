@@ -1,0 +1,86 @@
+{
+  "type": "collection",
+  "ttl": "4h",
+  "removeFields": [],
+  "resumeOnBoot": false,
+  "schedule": {},
+  "streamtags": [],
+  "workerAffinity": false,
+  "collector": {
+    "conf": {
+      "discovery": {
+        "discoverType": "http",
+        "discoverMethod": "get",
+        "discoverUrl": "`https://api.crowdstrike.com/reports/queries/report-executions/v1?`",
+        "discoverRequestParams": [
+          {
+            "name": "filter",
+            "value": "`scheduled_report_id:''+last_updated_on:>'${new Date((Date.now() - 1 * 60 * 60 *1000)).toISOString().split('.')[0]+\"Z\"}'`"
+          }
+        ],
+        "discoverDataField": "resources"
+      },
+      "collectMethod": "get",
+      "pagination": {
+        "type": "none"
+      },
+      "authentication": "loginSecret",
+      "timeout": 0,
+      "useRoundRobinDns": false,
+      "disableTimeFilter": false,
+      "rejectUnauthorized": false,
+      "safeHeaders": [],
+      "retryRules": {
+        "type": "backoff",
+        "interval": 1000,
+        "limit": 5,
+        "multiplier": 2,
+        "codes": [
+          429,
+          503
+        ],
+        "enableHeader": true
+      },
+      "loginUrl": "`https://api.crowdstrike.com/oauth2/token`",
+      "loginBody": "`client_id=${username}&client_secret=${password}`",
+      "tokenRespAttribute": "access_token",
+      "authHeaderKey": "Authorization",
+      "authHeaderExpr": "`Bearer ${token}`",
+      "clientSecretParamName": "client_secret",
+      "collectUrl": "'https://api.crowdstrike.com/reports/entities/report-executions-download/v1?ids=' + `${id}`",
+      "collectRequestParams": [],
+      "clientSecretParamValue": "`https://api.crowdstrike.com/oauth2/token`",
+      "username": "",
+      "password": "",
+      "authRequestHeaders": [
+        {
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        },
+        {
+          "name": "accept",
+          "value": "application/json"
+        }
+      ],
+      "credentialsSecret": ""
+    },
+    "destructive": false,
+    "type": "rest"
+  },
+  "input": {
+    "type": "collection",
+    "staleChannelFlushMs": 10000,
+    "sendToRoutes": true,
+    "preprocess": {
+      "disabled": true
+    },
+    "throttleRatePerSec": "0",
+    "output": "default",
+    "breakerRulesets": [
+      "CrowdStrike_Scheduled_Search"
+    ],
+    "metadata": []
+  },
+  "savedState": {},
+  "id": "CrowdStrike_Scheduled_Search"
+}
